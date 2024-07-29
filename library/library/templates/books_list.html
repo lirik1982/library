@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <section class="checkout-page">
+        <div class="container">
+            <div class="checkout-cart-form">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <table class="table shop_table">
+                            <thead>
+                            <tr>
+                                <th class="product-name"><b>Название</b></th>
+                                <th class="product-name"><b>Автор</b></th>
+                                <th class="product-name"><b>Жанр</b></th>
+                                <th class="product-name"><b>Год выпуска</b></th>
+                                <th class="product-name"><b>Состояние</b></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for book in books %}
+                                <tr class="cart_item">
+                                    <td class="product-name"><a href="#">{{ book.title }}</a></td>
+                                    <td class="product-name"><a href="#">{{ book.author }}</a></td>
+                                    <td class="product-name"><a href="#">{{ book.genre }}</a></td>
+                                    <td class="product-name"><a href="#">{{ book.year }}</a></td>
+                                    <td class="product-name">
+                                        {% if book.available %}
+                                            <button onclick="takeBook({{ book.id }})" class="btn btn-primary" id="take_button_{{ book.id }}">
+                                                Взять
+                                            </button>
+                                        {% else %}
+                                            <button onclick="takeBook({{ book.id }})" class="btn btn-primary disabled">На руках
+                                            </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            <script>
+                                function takeBook(bookId) {
+                                    $.ajax({
+                                        url: "{% url 'take_book' %}",
+                                        type: 'POST',
+                                        headers: {
+                                         'X-CSRFToken': '{{ csrf_token }}'
+                                         },
+                                        data: {
+                                            'book_id': bookId,
+                                        },
+                                        success: function (response) {
+                                            $('#take_button_' + bookId.toString()).addClass('disabled').text('У Вас');
+                                        },
+                                        error: function (error) {
+                                            // Ошибка при обновлении статуса книги
+                                        },
+                                    });
+                                }
+                            </script>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock content %}

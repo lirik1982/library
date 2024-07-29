@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <section class="checkout-page">
+        <div class="container">
+            <div class="checkout-cart-form">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <table class="table shop_table">
+                            <thead>
+                            <tr>
+                                <th class="product-name"><b>Название</b></th>
+                                <th class="product-name"><b>Автор</b></th>
+                                <th class="product-name"><b>Жанр</b></th>
+                                <th class="product-name"><b>Год выпуска</b></th>
+                                <th class="product-name"><b>Дата бронирования</b></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for book in books %}
+                                <tr class="cart_item">
+                                    <td class="product-name"><a href="#">{{ book.title }}</a></td>
+                                    <td class="product-name"><a href="#">{{ book.author }}</a></td>
+                                    <td class="product-name"><a href="#">{{ book.genre }}</a></td>
+                                    <td class="product-name"><a href="#">{{ book.year }}</a></td>
+                                    <td class="product-name"><a href="#">{{ book.date_return }}</a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock content %}

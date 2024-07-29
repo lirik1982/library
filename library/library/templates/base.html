@@ -1,0 +1,294 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>ClickBuy</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/slick.css' %}">
+    <link rel="stylesheet" href="{% static 'css/slick-theme.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700" rel="stylesheet">
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+</head>
+
+<body>
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">SEARCH HERE</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <form method="get" class="searchform" action="/search" role="search">
+                        <input type="hidden" name="type" value="product">
+                        <input type="text" name="q" class="form-control control-search">
+                        <span class="input-group-btn">
+                              <button class="btn btn-default button_search" type="button"><i data-toggle="dropdown"
+                                                                                             class="ion-ios-search"></i></button>
+                            </span>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<header>
+    <div class="topbar-mobile hidden-lg hidden-md">
+        <div class="right-nav">
+            <div class="active-mobile">
+                <div class="header_user_info popup-over e-scale hidden-lg hidden-md dropdown">
+                    <div data-toggle="dropdown" class="popup-title dropdown-toggle" title="Account">
+                        <i class="ion-android-person"></i><span> Авторизация</span>
+                    </div>
+                    <ul class="links dropdown-menu list-unstyled">
+                        <li>
+                            <a id="customer_login_link" href="#" title="Sign in"><i class="ion-log-in"></i> Войти</a>
+                        </li>
+                        <li>
+                            <a id="customer_register_link" href="#" title="Register"><i class="ion-ios-personadd"></i>
+                                Регистрация</a>
+                        </li>
+                        <li>
+                            <a class="account" rel="nofollow" href="#" title="My account"><i class="ion-ios-person"></i>
+                                Мой аккаунт</a>
+                        </li>
+                        <li>
+                            <a href="#" title="Check out"><i class="ion-ios-cart"></i> Выйти</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="active-mobile search-popup pull-right">
+                <div class="search-popup dropdown" data-toggle="modal" data-target="#myModal">
+                    <i class="ion-search fa-3a"></i>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="top-nav hidden-xs hidden-sm">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5 col-sm-5 col-xs-12">
+                    <div class="left-nav">
+                    </div>
+                </div>
+                <div class="col-md-7 col-sm-7 col-xs-12">
+                    <div class="right-nav">
+                        <ul>
+                            {% if user.is_authenticated %}
+                                <li>
+                                    <a href="{% url 'logout' %}">
+                                        <i class="ion-ios-personadd fa-1a" aria-hidden="true"></i>Выйти {{ request.user.username }}
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a href="#" data-toggle="modal" data-target="#registerModal">
+                                        <i class="ion-ios-personadd fa-1a" aria-hidden="true"></i>Создать аккаунт
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" data-toggle="modal" data-target="#loginModal">
+                                        <i class="ion-log-in fa-1a" aria-hidden="true"></i>Авторизация
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                        </ul>
+                        <span class="phone">8-800-000-0000</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {#    Modal register    #}
+    <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Регистрация</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'authentication:register' %}" class="contact-form" method="post"> {% csrf_token %}
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6 col-xs-12">
+                                    <strong>Имя пользователя</strong>
+                                    <input type="text" name="username" class="form-control" value="">
+                                </div>
+
+                                <div class="col-md-6 col-xs-12">
+                                    <strong>Email *</strong>
+                                    <input type="text" name="email" class="form-control" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-8 col-xs-12">
+                                    <strong>Полное имя</strong>
+                                    <input type="text" name="full_name" class="form-control" value="">
+                                </div>
+                                <div class="col-md-4 col-xs-12">
+                                    <strong>Телефон</strong>
+                                    <input type="text" name="phone" class="form-control" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6 col-xs-12">
+                                    <strong>Пароль</strong>
+                                    <input type="text" name="password1" class="form-control" value="">
+                                </div>
+                                <div class="col-md-6 col-xs-12">
+                                    <strong>Пароль еще раз</strong>
+                                    <input type="text" name="password2" class="form-control" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                        </div>
+                    </form>
+                    <!-- Здесь будет форма регистрации -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#    Modal login    #}
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Вход на сайт</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'authentication:login' %}" class="contact-form" method="post"> {% csrf_token %}
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6 col-xs-12">
+                                    <strong>Имя пользователя</strong>
+                                    <input type="text" name="username" class="form-control" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6 col-xs-12">
+                                    <strong>Пароль</strong>
+                                    <input type="text" name="password" class="form-control" value="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                            <button type="submit" class="btn btn-primary">Войти</button>
+                        </div>
+                    </form>
+                    <!-- Здесь будет форма регистрации -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-sm-8 col-xs-7 logo">
+                    <a href="#" title="library"><img src="{% static 'img/logo.webp' %}" alt="images"
+                                                     class="img-reponsive"></a>
+                </div>
+                <div class="col-md-9 col-sm-4 col-xs-5 nextlogo">
+                    <div class="search hidden-xs hidden-sm">
+                        <form action="#" class="search-form">
+                            <input type="text" name="s" class="form-control" placeholder="Search entrie store here">
+                            <button type="submit" class="search-icon"></button>
+                        </form>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="menu">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 col-sm-8 col-xs-6 column-right">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                        <span class="menu-title">MENU</span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="myNavbar">
+                        <ul class="menubar js-menubar">
+                            <li class=" menu-homepage menu-item-has-child ">
+                                <a href="#" title="Home"><i class="fa fa-home"></i>Библиотека</a>
+                                <span class="plus js-plus-icon"></span>
+                                <ul class="dropdown-menu menu-level">
+                                    <li><a href="{% url 'home' %}" title="home 1">Доступные книги</a></li>
+                                    <li><a href="{% url 'books_on_hands' %}" title="home 2">Книги на руках</a></li>
+                                </ul>
+                            </li>
+                            <li class="menu-collection-page menu-item-has-child">
+                                <a href="index.html" title="Home">Моя активность</a>
+                            </li>
+                            <li class="menu-collection-page menu-item-has-child dropdown">
+                                <a href="#" title="Marketplace">Контроль</a>
+                                <span class="plus js-plus-icon"></span>
+                                <ul class="dropdown-menu menu-level">
+                                    <li><a href="product-collection.html" title="shop collection">Список читателей</a>
+                                    </li>
+                                    <li><a href="shop-list-v2.html" title="shop list v1">Список должников</a></li>
+                                    <li><a href="{% url 'deals_history' %}" title="shop list v1">История выдач</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+{% block content %}
+{% endblock %}
+
+<footer>
+    <div class="copyright">
+        <div class="container">
+            <span>© <a href="#" title="">Kirill Degtyarev</a> - All Rights Reserved.</span>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</footer>
+<script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/owl.carousel.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/slick.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>
