@@ -11,14 +11,14 @@ class RegisterForm(UserCreationForm):
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(label='Username', max_length=254)
+    email = forms.EmailField(label='Email', max_length=254)
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
 
     def clean(self):
         cleaned_data = super().clean()
-        username = cleaned_data.get('username')
+        email = cleaned_data.get('email')
         password = cleaned_data.get('password')
-        if not User.objects.filter(username=username).exists():
+        if not User.objects.filter(email=email).exists():
             raise forms.ValidationError("Пользователь с таким именем не найден.")
         if password != cleaned_data.get('password'):
             raise forms.ValidationError("Пароли не совпадают.")

@@ -89,10 +89,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=20,
         choices=(('reader', 'Reader'), ('librarian', 'Librarian')),
         blank=True,
-        null=True
+        null=True,
+        default='reader',
     )
-    phone = models.CharField(max_length=12, blank=True, null=True)
+    phone = models.CharField(max_length=15, blank=True, null=True)
     full_name = models.CharField(max_length=250, blank=True, null=True)
+    address = models.CharField(max_length=250, blank=True, null=True)
 
     def __str__(self):
         """ Строковое представление модели (отображается в консоли) """

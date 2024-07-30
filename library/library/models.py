@@ -27,7 +27,7 @@ class Book(models.Model):
 class Deal(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     reader = models.ForeignKey(user, on_delete=models.CASCADE)
-    date_taken = models.DateField(null=True, blank=True)
-    date_get_back = models.DateField(null=True, blank=True)
+    date_taken = models.DateTimeField(null=True, blank=True)
+    date_get_back = models.DateTimeField(null=True, blank=True)
 
 

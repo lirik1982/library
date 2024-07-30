@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="menu">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 col-sm-8 col-xs-6 column-right">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                        <span class="menu-title">MENU</span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="myNavbar">
+                        <ul class="menubar js-menubar">
+                            <li class=" menu-homepage menu-item-has-child ">
+                                <a href="#" title="Home"><i class="fa fa-home"></i>Библиотека</a>
+                                <span class="plus js-plus-icon"></span>
+                                <ul class="dropdown-menu menu-level">
+                                    <li><a href="{% url 'home' %}" title="home 1">Доступные книги</a></li>
+                                    <li><a href="{% url 'books_on_hands' %}" title="home 2">Книги на руках</a></li>
+                                </ul>
+                            </li>
+                            <li class="menu-collection-page menu-item-has-child">
+                                <a href="{% url 'my_books' %}" title="my-books">Мои книги</a>
+                            </li>
+                            {% if role == 'librarian' %}
+                            <li class="menu-collection-page menu-item-has-child dropdown">
+                                <a href="#" title="Marketplace">Контроль</a>
+                                <span class="plus js-plus-icon"></span>
+                                <ul class="dropdown-menu menu-level">
+                                    <li><a href="{% url 'readers_list' %}" title="shop collection">Список читателей</a>
+                                    </li>
+                                    <li><a href="{% url 'bad_readers_list' %}" title="shop list v1">Список должников</a></li>
+                                    <li><a href="{% url 'deals_history' %}" title="shop list v1">История выдач</a></li>
+                                </ul>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

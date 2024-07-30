@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <section class="checkout-page">
+        <div class="container">
+            <div class="checkout-cart-form">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <table class="table shop_table">
+                            <thead>
+                            <tr>
+                                <th class="product-name"><b>Название</b></th>
+                                <th class="product-name"><b>Автор</b></th>
+                                <th class="product-name"><b>Год выпуска</b></th>
+                                <th class="product-name"><b>Дата бронирования</b></th>
+                                <th class="product-name"><b>Дата возврата</b></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for deal in deals %}
+                                <tr class="cart_item">
+                                    <td class="product-name"><p>{{ deal.title }}</p></td>
+                                    <td class="product-name"><p>{{ deal.author }}</p></td>
+                                    <td class="product-name"><p>{{ deal.year }}</p></td>
+                                    <td class="product-name"><p>{{ deal.date_taken|date:"d/m/Y" }}</p></td>
+                                    <td class="product-name">
+                                        {% if deal.date_get_back is not none %}
+                                            <p>{{ deal.date_get_back|date:"d/m/Y" }}</p>
+                                        {% else %}
+                                            <button onclick="returnBook({{ deal.id }})" class="btn btn-primary"
+                                                    id="return_button_{{ deal.id }}">
+                                                Вернуть
+                                            </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            <script>
+                                function returnBook(dealId) {
+                                    console.log(dealId);
+                                    $.ajax({
+                                        url: "{% url 'return_book' %}",
+                                        type: 'POST',
+                                        headers: {
+                                         'X-CSRFToken': '{{ csrf_token }}'
+                                         },
+                                        data: {
+                                            'deal_id': dealId,
+                                        },
+                                        success: function (response) {
+                                            $('#return_button_' + dealId.toString()).addClass('disabled').text('Возвращено');
+                                        },
+                                        error: function (error) {
+                                            // Ошибка при обновлении статуса книги
+                                        },
+                                    });
+                                }
+                            </script>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock content %}

@@ -21,29 +21,7 @@
 </head>
 
 <body>
-<div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">SEARCH HERE</h4>
-            </div>
-            <div class="modal-body">
-                <div class="input-group">
-                    <form method="get" class="searchform" action="/search" role="search">
-                        <input type="hidden" name="type" value="product">
-                        <input type="text" name="q" class="form-control control-search">
-                        <span class="input-group-btn">
-                              <button class="btn btn-default button_search" type="button"><i data-toggle="dropdown"
-                                                                                             class="ion-ios-search"></i></button>
-                            </span>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 <header>
     <div class="topbar-mobile hidden-lg hidden-md">
         <div class="right-nav">
@@ -70,11 +48,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="active-mobile search-popup pull-right">
-                <div class="search-popup dropdown" data-toggle="modal" data-target="#myModal">
-                    <i class="ion-search fa-3a"></i>
-                </div>
-            </div>
+
         </div>
         <div class="clearfix"></div>
     </div>
@@ -90,7 +64,7 @@
                         <ul>
                             {% if user.is_authenticated %}
                                 <li>
-                                    <a href="{% url 'logout' %}">
+                                    <a href="{% url 'authentication:logout' %}">
                                         <i class="ion-ios-personadd fa-1a" aria-hidden="true"></i>Выйти {{ request.user.username }}
                                     </a>
                                 </li>
@@ -106,7 +80,6 @@
                                     </a>
                                 </li>
                             {% endif %}
-
                         </ul>
                         <span class="phone">8-800-000-0000</span>
                     </div>
@@ -193,8 +166,8 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-md-6 col-xs-12">
-                                    <strong>Имя пользователя</strong>
-                                    <input type="text" name="username" class="form-control" value="">
+                                    <strong>Ваш email</strong>
+                                    <input type="text" name="email" class="form-control" value="">
                                 </div>
                             </div>
                         </div>
@@ -221,17 +194,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-3 col-sm-8 col-xs-7 logo">
-                    <a href="#" title="library"><img src="{% static 'img/logo.webp' %}" alt="images"
+                    <a href="{% url 'home' %}" title="library"><img src="{% static 'img/logo.webp' %}" alt="images"
                                                      class="img-reponsive"></a>
-                </div>
-                <div class="col-md-9 col-sm-4 col-xs-5 nextlogo">
-                    <div class="search hidden-xs hidden-sm">
-                        <form action="#" class="search-form">
-                            <input type="text" name="s" class="form-control" placeholder="Search entrie store here">
-                            <button type="submit" class="search-icon"></button>
-                        </form>
-                    </div>
-                    <div class="clearfix"></div>
                 </div>
             </div>
         </div>
@@ -254,18 +218,20 @@
                                 </ul>
                             </li>
                             <li class="menu-collection-page menu-item-has-child">
-                                <a href="index.html" title="Home">Моя активность</a>
+                                <a href="{% url 'my_books' %}" title="my-books">Мои книги</a>
                             </li>
+                            {% if user.role == 'librarian' %}
                             <li class="menu-collection-page menu-item-has-child dropdown">
                                 <a href="#" title="Marketplace">Контроль</a>
                                 <span class="plus js-plus-icon"></span>
                                 <ul class="dropdown-menu menu-level">
-                                    <li><a href="product-collection.html" title="shop collection">Список читателей</a>
+                                    <li><a href="{% url 'readers_list' %}" title="shop collection">Список читателей</a>
                                     </li>
-                                    <li><a href="shop-list-v2.html" title="shop list v1">Список должников</a></li>
+                                    <li><a href="{% url 'bad_readers_list' %}" title="shop list v1">Список должников</a></li>
                                     <li><a href="{% url 'deals_history' %}" title="shop list v1">История выдач</a></li>
                                 </ul>
                             </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>

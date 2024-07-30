@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load lib_tags %}
 {% block content %}
 
     <section class="checkout-page">
@@ -10,19 +10,25 @@
                         <table class="table shop_table">
                             <thead>
                             <tr>
+                                <th class="product-name"><b>Название</b></th>
                                 <th class="product-name"><b>Логин</b></th>
                                 <th class="product-name"><b>Полное имя</b></th>
                                 <th class="product-name"><b>Телефон</b></th>
                                 <th class="product-name"><b>Адрес</b></th>
+                                <th class="product-name"><b>Дата выдачи</b></th>
+                                <th class="product-name"><b>Дней на рукахх</b></th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for reader in readers %}
                                 <tr class="cart_item">
+                                    <td class="product-name"><p>{{ reader.title }}</p></td>
                                     <td class="product-name"><p>{{ reader.username }}</p></td>
-                                    <td class="product-name"><p>{{ reader.full_name }}</p></td>
+                                    <td class="product-name"><p>{{ reader.fullname }}</p></td>
                                     <td class="product-name"><p>{{ reader.phone }}</p></td>
                                     <td class="product-name"><p>{{ reader.address }}</p></td>
+                                    <td class="product-name"><p>{{ reader.date_taken | date:"d/m/Y" }}</p></td>
+                                    <td class="product-name"><p>{{ reader.date_taken | days_until }}</p></td>
                                 </tr>
                             {% endfor %}
                             </tbody>

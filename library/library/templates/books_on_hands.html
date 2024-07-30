@@ -24,7 +24,7 @@
                                     <td class="product-name"><a href="#">{{ book.author }}</a></td>
                                     <td class="product-name"><a href="#">{{ book.genre }}</a></td>
                                     <td class="product-name"><a href="#">{{ book.year }}</a></td>
-                                    <td class="product-name"><a href="#">{{ book.date_return }}</a></td>
+                                    <td class="product-name"><a href="#">{{ book.date_taken|date:"d/m/Y" }}</a></td>
                                 </tr>
                             {% endfor %}
                             </tbody>

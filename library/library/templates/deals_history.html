@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load lib_tags %}
 {% block content %}
 
     <section class="checkout-page">
@@ -22,13 +22,20 @@
                             <tbody>
                             {% for deal in deals %}
                                 <tr class="cart_item">
-                                    <td class="product-name"><p >{{ deal.title }}</p></td>
-                                    <td class="product-name"><p >{{ deal.author }}</p></td>
-                                    <td class="product-name"><p >{{ deal.year }}</p></td>
-                                    <td class="product-name"><p >{{ deal.date_taken }}</p></td>
-                                    <td class="product-name"><p >{{ deal.reader_name }}</p></td>
-                                    <td class="product-name"><p >{{ deal.reader_phone }}</p></td>
-                                    <td class="product-name"><p >{{ deal.date_return }}</p></td>
+                                    <td class="product-name"><p>{{ deal.title }}</p></td>
+                                    <td class="product-name"><p>{{ deal.author }}</p></td>
+                                    <td class="product-name"><p>{{ deal.year }}</p></td>
+                                    <td class="product-name"><p>{{ deal.date_taken|date:"d/m/Y" }}</p></td>
+                                    <td class="product-name"><p>{{ deal.reader_name }}</p></td>
+                                    <td class="product-name"><p>{{ deal.reader_phone }}</p></td>
+                                    {% if deal.date_get_back is none %}
+                                        <td class="product-name">
+                                            <p>{{ deal.date_taken | days_until }}  </p>
+                                        </td>
+                                    {% else %}
+                                        <td class="product-name"><p>{{ deal.date_get_back|date:"d/m/Y" }}</p>
+                                        </td>
+                                    {% endif %}
                                 </tr>
                             {% endfor %}
                             </tbody>

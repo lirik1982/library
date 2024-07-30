@@ -21,30 +21,51 @@
 
                             {% for book in books %}
                                 <tr class="cart_item">
-                                    <td class="product-name"><a href="#">{{ book.title }}</a></td>
-                                    <td class="product-name"><a href="#">{{ book.author }}</a></td>
-                                    <td class="product-name"><a href="#">{{ book.genre }}</a></td>
-                                    <td class="product-name"><a href="#">{{ book.year }}</a></td>
+                                    <td class="product-name">
+                                        <button style="border: none; background-color: white;"
+                                                id="copy_btn_{{ book.id }}"
+                                                onclick="copy_title({{ book.id }})">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                 fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd"
+                                                      d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
+                                            </svg>
+                                        </button>
+                                        <p id="book_title_{{ book.id }}">{{ book.title }}</p>
+                                    </td>
+                                    <td class="product-name"><p>{{ book.author }}</p></td>
+                                    <td class="product-name"><p>{{ book.genre }}</p></td>
+                                    <td class="product-name"><p>{{ book.year }}</p></td>
                                     <td class="product-name">
                                         {% if book.available %}
-                                            <button onclick="takeBook({{ book.id }})" class="btn btn-primary" id="take_button_{{ book.id }}">
+                                            <button onclick="takeBook({{ book.id }})" class="btn btn-primary"
+                                                    id="take_button_{{ book.id }}">
                                                 Взять
                                             </button>
                                         {% else %}
-                                            <button onclick="takeBook({{ book.id }})" class="btn btn-primary disabled">На руках
+                                            <button onclick="takeBook({{ book.id }})" class="btn btn-primary disabled">
+                                                На руках
                                             </button>
                                         {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
                             <script>
+                                function copy_title(id) {
+                                    var copiedtext = document.getElementById("book_title_" + id.toString());
+                                    console.log(copiedtext);
+                                    navigator.clipboard.writeText(copiedtext.innerText);
+                                    alert("Скопировано в буфер обмена '" + copiedtext.innerText + "'");
+                                }
+                            </script>
+                            <script>
                                 function takeBook(bookId) {
                                     $.ajax({
                                         url: "{% url 'take_book' %}",
                                         type: 'POST',
                                         headers: {
-                                         'X-CSRFToken': '{{ csrf_token }}'
-                                         },
+                                            'X-CSRFToken': '{{ csrf_token }}'
+                                        },
                                         data: {
                                             'book_id': bookId,
                                         },
