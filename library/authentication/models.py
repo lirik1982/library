@@ -5,7 +5,7 @@ from django.contrib.auth.models import (
 from django.db import models
 from datetime import datetime, timedelta
 import jwt
-
+# import encode, decode, unsign, verify, InvalidTokenError
 
 class UserManager(BaseUserManager):
     """
@@ -42,47 +42,15 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    # Каждому пользователю нужен понятный человеку уникальный идентификатор,
-    # который мы можем использовать для предоставления User в пользовательском
-    # интерфейсе. Мы так же проиндексируем этот столбец в базе данных для
-    # повышения скорости поиска в дальнейшем.
     username = models.CharField(db_index=True, max_length=255, unique=True)
-
-    # Так же мы нуждаемся в поле, с помощью которого будем иметь возможность
-    # связаться с пользователем и идентифицировать его при входе в систему.
-    # Поскольку адрес почты нам нужен в любом случае, мы также будем
-    # использовать его для входы в систему, так как это наиболее
-    # распространенная форма учетных данных на данный момент (ну еще телефон).
     email = models.EmailField(db_index=True, unique=True)
-
-    # Когда пользователь более не желает пользоваться нашей системой, он может
-    # захотеть удалить свой аккаунт. Для нас это проблема, так как собираемые
-    # нами данные очень ценны, и мы не хотим их удалять :) Мы просто предложим
-    # пользователям способ деактивировать учетку вместо ее полного удаления.
-    # Таким образом, они не будут отображаться на сайте, но мы все еще сможем
-    # далее анализировать информацию.
     is_active = models.BooleanField(default=True)
-
-    # Этот флаг определяет, кто может войти в административную часть нашего
-    # сайта. Для большинства пользователей это флаг будет ложным.
     is_staff = models.BooleanField(default=False)
-
-    # Временная метка создания объекта.
     created_at = models.DateTimeField(auto_now_add=True)
-
-    # Временная метка показывающая время последнего обновления объекта.
     updated_at = models.DateTimeField(auto_now=True)
-
-    # Дополнительный поля, необходимые Django
-    # при указании кастомной модели пользователя.
-
-    # Свойство USERNAME_FIELD сообщает нам, какое поле мы будем использовать
-    # для входа в систему. В данном случае мы хотим использовать почту.
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
-    # Сообщает Django, что определенный выше класс UserManager
-    # должен управлять объектами этого типа.
     objects = UserManager()
 
     role = models.CharField(
@@ -97,7 +65,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     address = models.CharField(max_length=250, blank=True, null=True)
 
     def __str__(self):
-        """ Строковое представление модели (отображается в консоли) """
         return self.email
 
     @property
@@ -127,12 +94,19 @@ class User(AbstractBaseUser, PermissionsMixin):
         пользователя, срок действия токена составляет 1 день от создания
         """
         dt = datetime.now() + timedelta(days=1)
-
-        token = jwt.encode({
+        token = jwt.encode(payload={
             'id': self.pk,
             'exp': int(dt.strftime('%s'))
-        }, settings.SECRET_KEY, algorithm='HS256')
+        },
+            key=settings.SECRET_KEY,
+            algorithm='HS256'
+        )
 
+        # return jwt.decode(
+        #     jwt=token,
+        #     key=settings.SECRET_KEY,
+        #     algorithms='HS256',
+        # )
         return token.decode('utf-8')
 
 

@@ -4,7 +4,7 @@ from django.conf import settings
 
 from rest_framework import authentication, exceptions
 
-from .models import User
+from authentication.models import User
 
 
 class JWTAuthentication(authentication.BaseAuthentication):
@@ -52,8 +52,10 @@ class JWTAuthentication(authentication.BaseAuthentication):
         prefix = auth_header[0].decode('utf-8')
         token = auth_header[1].decode('utf-8')
 
-        if prefix.lower() != auth_header_prefix:
-            # Префикс заголовка не тот, который мы ожидали - отказ.
+        # if prefix.lower() != auth_header_prefix:
+        #     # Префикс заголовка не тот, который мы ожидали - отказ.
+        #     return None
+        if prefix.lower() != 'bearer':
             return None
 
         # К настоящему моменту есть "шанс", что аутентификация пройдет успешно.
@@ -66,8 +68,8 @@ class JWTAuthentication(authentication.BaseAuthentication):
         вернуть пользователя и токен, иначе - сгенерировать исключение.
         """
         try:
-            payload = jwt.decode(token, settings.SECRET_KEY)
-        except Exception:
+            payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms='HS256')
+        except Exception as e:
             msg = 'Ошибка аутентификации. Невозможно декодировать токеню'
             raise exceptions.AuthenticationFailed(msg)
 

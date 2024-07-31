@@ -73,6 +73,7 @@
                                             $('#take_button_' + bookId.toString()).addClass('disabled').text('У Вас');
                                         },
                                         error: function (error) {
+                                            window.location.href = '{% url 'authentication:information' %}';
                                             // Ошибка при обновлении статуса книги
                                         },
                                     });

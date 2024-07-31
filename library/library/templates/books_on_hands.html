@@ -14,7 +14,7 @@
                                 <th class="product-name"><b>Автор</b></th>
                                 <th class="product-name"><b>Жанр</b></th>
                                 <th class="product-name"><b>Год выпуска</b></th>
-                                <th class="product-name"><b>Дата бронирования</b></th>
+{#                                <th class="product-name"><b>Дата бронирования</b></th>#}
                             </tr>
                             </thead>
                             <tbody>
@@ -24,7 +24,7 @@
                                     <td class="product-name"><a href="#">{{ book.author }}</a></td>
                                     <td class="product-name"><a href="#">{{ book.genre }}</a></td>
                                     <td class="product-name"><a href="#">{{ book.year }}</a></td>
-                                    <td class="product-name"><a href="#">{{ book.date_taken|date:"d/m/Y" }}</a></td>
+{#                                    <td class="product-name"><a href="#">{{ book.date_taken|date:"d/m/Y" }}</a></td>#}
                                 </tr>
                             {% endfor %}
                             </tbody>

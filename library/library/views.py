@@ -11,6 +11,7 @@ from django.db.models import F, Count, Q
 from authentication.models import User
 from authentication.views import check_auth, check_is_librarian
 
+
 def home_view(request):
     context = {
         'books': Book.objects.filter(available=True).order_by('title')
@@ -20,9 +21,16 @@ def home_view(request):
 
 @check_auth
 def books_on_hands_view(request):
-    unavailable_books = Book.objects.filter(available=False).annotate(
-        date_taken=F('deal__date_taken'),
-    ).values('title', 'author', 'date_taken', 'year', 'date_taken', 'genre')
+
+    # sqlite не делает distinct
+    # unavailable_books = Book.objects.filter(available=False).annotate(
+    #     date_taken=F('deal__date_taken'),
+    # ).values('title', 'author', 'date_taken', 'year', 'date_taken', 'genre'
+    #          ).order_by('-date_taken'
+    #                     ).distinct('title') #TODO
+
+    unavailable_books = (Book.objects.filter(available=False).
+                         values('title', 'author', 'year', 'genre'))
 
     context = {
         'books': unavailable_books,
@@ -47,24 +55,29 @@ def deals_history(request):
     return render(request, 'deals_history.html', context)
 
 
-def take_book(request):
+def take_book(book_id, user):
+    book = get_object_or_404(Book, id=book_id)
+    if book.available:
+        deal = Deal(
+            book=book,
+            reader=user,
+            date_taken=timezone.now(),
+            date_get_back=None
+        )
+        deal.save()
+        book.available = False
+        book.save()
+        return True
+    else:
+        return False
+
+
+def take_book_view(request):
     if request.method == 'POST':
         book_id = request.POST.get('book_id')
-        book = get_object_or_404(Book, id=book_id)
-        if book.available:
-            user = request.user
-            deal = Deal(
-                book=book,
-                reader=user,
-                date_taken=timezone.now(),
-                date_get_back=None
-            )
-            deal.save()
-            book.available = False
-            book.save()
+        if take_book(book_id, request.user):
             return HttpResponse('Есть выдача', status=200)
-        else:
-            return HttpResponse('Ошибка', status=400)
+    return HttpResponse('Ошибка', status=400)
 
 
 @check_auth
@@ -99,10 +112,12 @@ def return_book(request):
         else:
             return HttpResponse('Возвращена', status=200)
 
+
 @check_is_librarian
 def readers_list(request):
     readers = User.objects.filter(role='reader')
     return render(request, 'readers_list.html', {'readers': readers})
+
 
 @check_is_librarian
 def bad_readers_list(request):

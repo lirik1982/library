@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -26,7 +25,6 @@ SECRET_KEY = 'django-insecure-#7jr)!1^6=tpzfjc90gw&9v36%byt(**)qyi38kfa4#j8pylun
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -39,8 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'drf_spectacular',
     'authentication',
     'library',
+    'api',
+    'jwt'
 ]
 
 MIDDLEWARE = [
@@ -73,7 +74,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'library.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -104,7 +104,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -116,15 +115,15 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'library/static/'
 
 import os
+
 STATICFILES_DIRS = [
- os.path.join(BASE_DIR, "library/static/"),
+    os.path.join(BASE_DIR, "library/static/"),
 ]
 
 # Default primary key field type
@@ -132,10 +131,10 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# REST_FRAMEWORK = {
-#     'EXCEPTION_HANDLER': 'library.exceptions.core_exception_handler',
-#     'NON_FIELD_ERRORS_KEY': 'error',
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'authentication.backends.JWTAuthentication',
-#     ),
-# }
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'library.exceptions.core_exception_handler',
+    'NON_FIELD_ERRORS_KEY': 'error',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'api.backends.JWTAuthentication',
+    ),
+}
