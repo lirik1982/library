@@ -22,11 +22,11 @@ Junior Python разработчик
     docker-compose up -d
 ```
 - будет выполнено развертывание docker-контейнеров с настроенным образом:
-    - django/drf
-  суперпользователь - test@mail.com/123
-  библиотекарь - librarian1@mail.ru/!Qwerty1
-  читатель 1 - reader1@mail.ru/!Qwerty1
-  читатель 2 - reader2@mail.ru/!Qwerty1
+  \  - django/drf
+  \суперпользователь - test@mail.com/123
+  \библиотекарь - librarian1@mail.ru/!Qwerty1
+  \читатель 1 - reader1@mail.ru/!Qwerty1
+  \читатель 2 - reader2@mail.ru/!Qwerty1
 
 - сервис готов к обработке запросов
 
