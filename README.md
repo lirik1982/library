@@ -51,6 +51,7 @@ Junior Python разработчик
 ```
 
 Будет получен ответ вида:
+ ```cmd
 {
     "user": {
         "email": "reader1@mail.ru",
@@ -58,37 +59,138 @@ Junior Python разработчик
         "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6OCwiZXhwIjoxNzIyNTAyOTM2fQ.haSeeMybF_TPKtjvA6NC7E-je-Yo0oWlhCZf8HaOMLc"
     }
 }
+```
 
 Значение токена, нужно скопировать в буфер обмена, для использования в последующих запросах
 
 
+<br>
+<h3>Для получения списка книг</h3>
+* Для отправки данных для обработки, необходимо выполнить GET-запрос с<br>
+вариантом авторизации Authorization: Bearer и токеном, полученным, при авторизации
 
-* Выполнить операцию, например, можно с помощью программы curl, выполнив команду:
- 
 ```cmd
-    curl --location --request POST http://localhost:8000/api/V1/deals -F "file=@deals.csv"
+  curl --location 'localhost:8000/api/books/' \
+--header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6OCwiZXhwIjoxNzIyNTAyOTM2fQ.haSeeMybF_TPKtjvA6NC7E-je-Yo0oWlhCZf8HaOMLc' \
+--data ''
+
 ```
 
-* При успешном выполнении, будет получен ответ "response: OK"
-* ![ok](./Pics/1.png)
-* Данные внесены в БД, можно выполнять GET-запрос
+Будет получен ответ вида:
+ ```cmd
+...
+"list": [
+            {
+                "id": 1,
+                "title": "Машина времени",
+                "author": "Герберт Уэлс",
+                "genre": "научная фантастика"
+            },
+            {
+                "id": 2,
+                "title": "Автостопом по галактике",
+                "author": "Дуглас Адамс",
+                "genre": "научная фантастика"
+            },
+            {
+...
+```
 
 <br>
-<h3>GET</h3>
+<h3>Для взятия книги из библиотеки</h3>
+* Для отправки данных для обработки, необходимо выполнить GET-запрос с<br>
+вариантом авторизации Authorization: Bearer и токеном, полученным, при авторизации
 
-* Для получения обработанных данных необходимо выполнить GET-запрос на адрес:<br>
 ```cmd
-    http://localhost:8000/api/V1/deals
+ curl --location 'localhost:8000/api/take_book/<N>' \
+--header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6OCwiZXhwIjoxNzIyNTAyOTM2fQ.haSeeMybF_TPKtjvA6NC7E-je-Yo0oWlhCZf8HaOMLc' \
+--data ''
 ```
-* Выполнить операцию, например, можно с помощью программы curl, выполнив команду:<br>
+Вместо <N> следует указать ID желаемой книги.
+
+Будет получен ответ вида:
+ ```cmd
+...
+{
+    "user": {
+        "Операция": "Успешно"
+    }
+}
+
+ИЛИ
+
+{
+    "user": {
+        "Операция": "Неудача"
+    }
+}
+```
+
+<br>
+<h3>Для возврата книги в библиотеку</h3>
+* Для отправки данных для обработки, необходимо выполнить GET-запрос с<br>
+вариантом авторизации Authorization: Bearer и токеном, полученным, при авторизации
+
 ```cmd
-    curl --location --request GET http://localhost:8000/api/V1/deals
+curl --location 'localhost:8000/api/return_book/<N>' \
+--header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6OCwiZXhwIjoxNzIyNTAyOTM2fQ.haSeeMybF_TPKtjvA6NC7E-je-Yo0oWlhCZf8HaOMLc' \
+--data ''
 ```
-* Если действия верные будет получено поле "response"<br>
-* ![response](./Pics/2.png)
-* Команда для завершения работы сервиса
+Вместо <N> следует указать ID возвращаемой книги.
+
+Будет получен ответ вида:
+ ```cmd
+...
+{
+    "user": {
+        "Операция": "Успешно"
+    }
+}
+
+ИЛИ
+
+{
+    "user": {
+        "Операция": "Неудача"
+    }
+}
+```
+
+<br>
+<h3>Для получения списка должников и книг "на руках" </h3>
+* Для отправки данных для обработки, необходимо выполнить GET-запрос с<br>
+вариантом авторизации Authorization: Bearer и токеном, полученным, при авторизации
+
 ```cmd
-    docker-compose down
+curl --location 'localhost:8000/api/books_on_hands' \
+--header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6OCwiZXhwIjoxNzIyNTAyOTM2fQ.haSeeMybF_TPKtjvA6NC7E-je-Yo0oWlhCZf8HaOMLc' \
+--data ''
 ```
+
+Будет получен ответ вида:
+ ```cmd
+...
+"books_on_hands": [
+            {
+                "id": 5,
+                "book": {
+                    "id": 6,
+                    "title": "Девушка с татуировкой дракона",
+                    "author": "Стиг Ларссон",
+                    "genre": "детектив"
+                },
+                "reader": {
+                    "username": "reader1",
+                    "email": "reader1@mail.ru",
+                    "full_name": "Иван Иванов",
+                    "phone": "+16665554444",
+                    "address": "Пушкина 15-1"
+                },
+                "date_taken": "2024-06-29T00:00:00Z",
+                "date_since_taked": 32
+            },
+```
+
+
 
 
